@@ -1,0 +1,55 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% File:
+%       vilatac/sample.tex
+%
+% Maintainer:
+%       Sepp Tannhuber
+%
+% Version:
+%       1
+%
+% Usage:
+%    -> Put the following key mapping into ~/.vimrc:
+%       cmap TAB !vilatac<CR><C-j>
+%    -> Create table (see sample below):
+%       1. Use & without whitespace as field
+%          separator
+%       2. For the midrules between header and body
+%          use <startcol>-<endcol>, where <startcol>
+%          and <endcol> are the first and last columns
+%          to underline
+%       3. Use <cellcontent>:<colnumber> for
+%          multicolumns, where <colnumber> is the
+%          number of columns to combine
+%       4. Use line break to start a new line
+%    -> Mark table in VISUAL mode
+%    -> In normal mode type :TAB to convert table to
+%       LaTeX syntax
+%    -> Write a caption
+%    -> Type <C-j> to jump to alignment field
+%    -> Enter <l>, <c> or <r> for left or right
+%       alignment of the columns
+%    -> Type <C-j> to jump to label field
+%    -> Enter label name
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\documentclass[]{scrartcl}
+\usepackage{booktabs, colortbl, multirow}
+
+\begin{document}
+% --- BEGIN TABLE ---
+First header:3&Second header:3&Third header&Fourth header:2
+Sub 1&Sub 2&Sub 3&Sub 1&Sub 2&Sub 3&Sub 1&Sub 1&Sub 2
+1-3&4-6&7-7&8-9
+one&two&\bfseries bold font&four&five&six&seven&eight&nine
+one&two&three&four&five&six&seven&eight&nine
+one&two&three&four&five&six&seven&eight&nine
+one&two&three&four&five&six&seven&eight&nine
+one&two&three&four&five&six&seven&eight&nine
+one&two&three&four&five&six&seven&eight&nine
+one&two&three&\emph{multicolumn:} column 4 to column 6:3&seven&eight&nine
+one&two&three&four&five&six&seven&eight&nine
+one&two&three&four&five&six&seven&eight&nine
+% --- END TABLE ---
+\end{document}
