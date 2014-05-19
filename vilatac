@@ -46,13 +46,23 @@ BEGIN{
     # Calculate number of columns and print rest of table header
     if(NR==1) {
         for(i=1; i<=NF; i++) {
-            if($i ~ /.+:([[:digit:]+])/)
-                MULTCOL=gensub(/.+:([[:digit:]+])/, "\\1", "g", $i)
-            else
-                MULTCOL=1
-            COLNUM+=MULTCOL
+            if($i ~ /:[[:digit:]+]$/)
+                COLFORMAT[i]=gensub(/.*:([[:digit:]+])/, "*{\\1}l", "g", $i)
+            if($i ~ /:[[:digit:]+]\$/)
+                COLFORMAT[i]=gensub(/.*:([[:digit:]+])\$/, "*{\\1}{>$r<$}", "g", $i)
+            if($i ~ /:\$/)
+                COLFORMAT[i]=gensub(/.*/, ">$r<$", "g", $i)
+            if($i ~ /:[[:digit:]+][^$\s]/)
+                COLFORMAT[i]=gensub(/.*:([[:digit:]+])(.)/, "*{\\1}{\\2}", "g", $i)
+            if($i ~ /:[^[:digit:]$]+/)
+                COLFORMAT[i]=gensub(/.*:(.*)/, "\\1", "g", $i)
+            if(COLFORMAT[i]=="")
+                COLFORMAT[i]="l"
         }
-        print "\\begin{tabular}{*{"COLNUM"}{<+lcr+>}}\n\t\t"
+        print "\\begin{tabular}{"
+        for(i in COLFORMAT)
+            print COLFORMAT[i]
+        print "}\n\t\t"
         print "\\toprule\n\t\t"
     }
     ##############################################
@@ -73,8 +83,10 @@ BEGIN{
             b=gensub(/([[:digit:]*]-[[:digit:]*])/, "\\\\cmidrule(l){\\1}\n\t\t", "g", a)
 
         # Format multicolumns, always left aligned
-        c=gensub(/(.+):([[:digit:]+])/, "\\\\multicolumn{\\2}{l}{\\1}", "g", b)
-        print c
+        c=gensub(/(.+):([[:digit:]+]).*/, "\\\\multicolumn{\\2}{l}{\\1}", "g", b)
+
+        if(NR != 1 || $1 !~ /^:/)
+            print c
 
         # Insert field separators and line breaks
         if($i ~ /[[:digit:]*]-[[:digit:]*]/)
@@ -82,12 +94,14 @@ BEGIN{
         else {
             if(i<NF) {
                 if(HEADERFONT != "")
-                    print "&\n\t\t"
+                    separator="&\n\t\t"
                 else
-                    print "& "
+                    separator="& "
             }
             else
-                print "\\\\\n\t\t"
+                separator="\\\\\n\t\t"
+            if(NR != 1 || $1 !~ /^:/)
+                print separator
         }
     }
 }
