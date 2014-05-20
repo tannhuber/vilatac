@@ -32,11 +32,12 @@
 
 
 \documentclass[]{scrartcl}
-\usepackage{booktabs, colortbl, multirow, dcolumn}
+\usepackage{booktabs, colortbl, multirow, dcolumn, lstlisting}
 \newcolumntype{.}{D{.}{.}{2}}
 \newcolumntype{,}{D{,}{,}{2}}
 
 \begin{document}
+\section*{ViLaTaC, a very flexible, easy to use table creator}
 Try out the following examples. Mark the lines between
 BEGIN TABLE and END TABLE in visual mode. Change to normal mode and type~:TAB\@.
 See what happens. Write a caption, change to the label field typing $<$C-j$>$ and
@@ -51,32 +52,32 @@ first to the third column. The lines below the midrule are table body lines.
 Their font is also fixed in the vilatac script.
 
 % --- BEGIN TABLE 1 ---
-one&two&three
+animal&weight&appetite
 1-3
-1&2&3
-1&2&3
-1&2&3
+dog&25&hoggish
+cat&303&gourmet
+pig&80&eats everything
 % --- END TABLE 1 ---
 
 \paragraph{Two header lines, midrules for each column, two columns in math mode}
-Now there are two header lines. The first line has a multicolumn definition. The
-``:2'' tells, that it should cover the first two columns. They are in math mode,
-see the ``\$'' sign at the end. \textbf{The mode must be defined in the first
-line.}
-The first two columns of the second header line are defined as multicolumns as
-well in order to protect them from math mode.  This is important to know.
+Now there are two header lines. The second line has a multicolumn definition. The
+``:2'' tells, that it should cover the next two columns. They are in math mode,
+see the ``\$'' sign at the end. \textbf{The column formati must be defined in
+the first line.}
+The last two columns of the second header line are defined as multicolumns as
+well in order to protect them from math mode. This is important to know.
 \textbf{If a header is in math mode it must be protected by a multicolumn.}
 Columns in math mode are right aligned, while text columns are left aligned.
 Header lines are always left aligned. The midrule is interrupted between the
-second and third column.
+first and the second column.
 
 % --- BEGIN TABLE 2 ---
-Right aligned in math mode:2$&Left aligned in text mode
-one:1&two:1&three
-1-2&3-3
-1&2&3
-1&2&3
-1&2&3
+animal&characteristics:2$
+&weight:1&appetite:1
+1-1&2-3
+dog&25&\infty
+cat&303&\lim_{\textrm{delicious}\rightarrow\textrm{saturated}}
+pig&80&\int \textrm{food}
 % --- END TABLE 2 ---
 
 \paragraph{Individual column formatting}
@@ -90,8 +91,8 @@ decimal point separator while the last two lines use a comma separator.
 
 % --- BEGIN TABLE 3 ---
 :.&:2,
-Decimal point and comma separator:2&Decimal comma separator:1
-one:1&two:1&three:1
+Decimal separators:2&Decimal separator:1
+point:1&comma:1&comma:1
 1-2&3-3
 1&2&3
 1.1&,2&3,3
@@ -109,7 +110,7 @@ First headerline:2&
 1-2
 Subheader 1&Subheader 2&Subheader 3
 1-3
-11&2&3
+1&2&3
 1&2&3
 1&2&3
 % --- END TABLE 4 ---
