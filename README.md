@@ -23,6 +23,7 @@ publishing.
 
 * set fonts in vilatac
 * copy vilatac somewhere to your $PATH, e.g. ~/bin/
+* check, that it is executable (chmod +x ~/bin/vilatac)
 * put key mapping into ~/.vimrc: cmap TAB !vilatac<CR><C-j>
 
 # Usage
