@@ -1,0 +1,116 @@
+#!/usr/bin/gawk -f
+
+##################################################
+# File:
+#       vltc
+#
+# Maintainer:
+#       Sepp Tannhuber
+#
+# Version:
+#       1
+#
+# Sections:
+#    -> Table font definitions
+#    -> Awk field seperators
+#    -> Basic table layout (begin)
+#    -> Line formatting
+#    -> Basic table layout (end)
+##################################################
+
+BEGIN{
+    ##############################################
+    # => Table font definitions
+    ##############################################
+    HEADERFONT="\\\\footnotesize\\\\sffamily\\\\bfseries "
+    FONT="\\small"
+
+    ##############################################
+    # => Awk field seperators
+    ##############################################
+    FS="&"
+    ORS=""
+
+    ##############################################
+    # => Basic table layout (begin)
+    ##############################################
+    print "\\begin{table}\n\t"
+    print "\\caption{}\n\t"
+    print "\\smallskipamount=1pt\n\t"
+    print "\\centering\n\t"
+
+    # Set table body font
+    print FONT"\n\t\t"
+}
+{
+    # Calculate number of columns and print rest of table header
+    if(NR==1) {
+        for(i=1; i<=NF; i++) {
+            if($i ~ /:[[:digit:]+]$/)
+                COLFORMAT[i]=gensub(/.*:([[:digit:]+])/, "*{\\1}l", "g", $i)
+            if($i ~ /:[[:digit:]+]\$/)
+                COLFORMAT[i]=gensub(/.*:([[:digit:]+])\$/, "*{\\1}{>$r<$}", "g", $i)
+            if($i ~ /:\$/)
+                COLFORMAT[i]=gensub(/.*/, ">$r<$", "g", $i)
+            if($i ~ /:[[:digit:]+][^$\s]/)
+                COLFORMAT[i]=gensub(/.*:([[:digit:]+])(.)/, "*{\\1}{\\2}", "g", $i)
+            if($i ~ /:[^[:digit:]$]+/)
+                COLFORMAT[i]=gensub(/.*:(.*)/, "\\1", "g", $i)
+            if(COLFORMAT[i]=="")
+                COLFORMAT[i]="l"
+        }
+        print "\\begin{tabular}{"
+        for(i in COLFORMAT)
+            print COLFORMAT[i]
+        print "}\n\t\t"
+        print "\\toprule\n\t\t"
+    }
+    ##############################################
+    # => Line formatting
+    ##############################################
+    for(i=1; i<=NF; i++) {
+        if($i ~ /[[:digit:]*]-[[:digit:]*]/)
+            a=$i
+        else
+            a=gensub(/(.+)/, HEADERFONT"\\1", "g", $i)
+
+        # Format the midrules, alignment depends on position
+        if(i==1)
+            b=gensub(/([[:digit:]*]-[[:digit:]*])/, "\\\\cmidrule(r){\\1}", "g", a)
+        if(1<i && i<NF)
+            b=gensub(/([[:digit:]*]-[[:digit:]*])/, "\\\\cmidrule(rl){\\1}", "g", a)
+        if(i==NF)
+            b=gensub(/([[:digit:]*]-[[:digit:]*])/, "\\\\cmidrule(l){\\1}\n\t\t", "g", a)
+
+        # Format multicolumns, always left aligned
+        c=gensub(/(.+):([[:digit:]+]).*/, "\\\\multicolumn{\\2}{l}{\\1}", "g", b)
+
+        if(NR != 1 || $1 !~ /^:/)
+            print c
+
+        # Insert field separators and line breaks
+        if($i ~ /[[:digit:]*]-[[:digit:]*]/)
+            HEADERFONT=""
+        else {
+            if(i<NF) {
+                if(HEADERFONT != "")
+                    separator="&\n\t\t"
+                else
+                    separator="& "
+            }
+            else
+                separator="\\\\\n\t\t"
+            if(NR != 1 || $1 !~ /^:/)
+                print separator
+        }
+    }
+}
+##############################################
+# => Basic table layout (end)
+##############################################
+END{
+    print "\\bottomrule\n\t"
+    print "\\end{tabular}"
+    print "\\label{tbl:}\n"
+    print "\\end{table}"
+}
