@@ -1,6 +1,6 @@
 # ViLaTaC (Vim LaTeX Table Creator)
 
-easy table creator for LaTeX, created for vim with the vim-latex plugin
+easy table creator for LaTeX, created for vim with the vim-latex plugin.
 
 # Why?
 
@@ -29,9 +29,11 @@ publishing.
 Learning by doing. Try the examples in sample.tex.
 
 # Other editors
-I know, there are other editors. They should work with ViLaTaC as well. But you
-might want to remove the jump marks from the vilatac file in that case.
+I know, there are other editors. You can use LaTaC with them. The only
+difference is that the jump marks were removed.
 
 # Alternatives
-[https://aur.archlinux.org/packages/perl-latex-table/][1]
+* latac (it's in this repository)
+* [https://aur.archlinux.org/packages/perl-latex-table/][1]
+
 [1]: https://aur.archlinux.org/packages/perl-latex-table/
