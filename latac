@@ -34,7 +34,7 @@ BEGIN{
     ##############################################
     # => Basic table layout (begin)
     ##############################################
-    print "\\begin{table}\n\t"
+    print "\\begin{table}[]\n\t"
     print "\\caption{}\n\t"
     print "\\smallskipamount=1pt\n\t"
     print "\\centering\n\t"
@@ -60,8 +60,13 @@ BEGIN{
                 COLFORMAT[i]="l"
         }
         print "\\begin{tabular}{"
-        for(i in COLFORMAT)
+        for(i in COLFORMAT) {
             print COLFORMAT[i]
+            COLS=gensub(/.*\*\{([[:digit:]+])\}.*/, "\\1", "g", COLFORMAT[i])
+            if(COLS !~ /^[[:digit:]+]$/)
+                COLS=1
+            COLNUMS+=COLS
+        }
         print "}\n\t\t"
         print "\\toprule\n\t\t"
     }
@@ -75,12 +80,18 @@ BEGIN{
             a=gensub(/(.+)/, HEADERFONT"\\1", "g", $i)
 
         # Format the midrules, alignment depends on position
-        if(i==1)
-            b=gensub(/([[:digit:]*]-[[:digit:]*])/, "\\\\cmidrule(r){\\1}", "g", a)
-        if(1<i && i<NF)
-            b=gensub(/([[:digit:]*]-[[:digit:]*])/, "\\\\cmidrule(rl){\\1}", "g", a)
-        if(i==NF)
-            b=gensub(/([[:digit:]*]-[[:digit:]*])/, "\\\\cmidrule(l){\\1}\n\t\t", "g", a)
+        firstcol=gensub(/([[:digit:]+])-[[:digit:]+]/, "\\1", "g", a)
+        lastcol=gensub(/[[:digit:]+]-([[:digit:]+])/, "\\1", "g", a)
+        if(firstcol==1)
+            f=""
+        else
+            f="l"
+        if(lastcol==COLNUMS)
+            l=""
+        else
+            l="r"
+
+        b=gensub(/([[:digit:]+]-[[:digit:]+])/, "\\\\cmidrule("f l"){\\1}", "g", a)
 
         # Format multicolumns, always left aligned
         c=gensub(/(.+):([[:digit:]+]).*/, "\\\\multicolumn{\\2}{l}{\\1}", "g", b)
@@ -90,7 +101,13 @@ BEGIN{
 
         # Insert field separators and line breaks
         if($i ~ /[[:digit:]*]-[[:digit:]*]/)
-            HEADERFONT=""
+        {
+            if(i==NF)
+            {
+                print "\n\t\t"
+                HEADERFONT=""
+            }
+        }
         else {
             if(i<NF) {
                 if(HEADERFONT != "")
