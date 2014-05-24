@@ -25,6 +25,8 @@
 %    -> Mark table in VISUAL mode
 %    -> In normal mode type :TAB to convert table to
 %       LaTeX syntax
+%    -> Enter floating position parameter
+%    -> Type <C-j> to jump to caption placeholder
 %    -> Write a caption
 %    -> Type <C-j> to jump to label field
 %    -> Enter label name
@@ -32,22 +34,21 @@
 
 
 \documentclass[]{scrartcl}
-\usepackage{booktabs, colortbl, multirow, dcolumn, lstlisting}
+\usepackage{booktabs, colortbl, multirow, dcolumn}
 \newcolumntype{.}{D{.}{.}{2}}
 \newcolumntype{,}{D{,}{,}{2}}
 
 \begin{document}
 \section*{ViLaTaC, a very flexible, easy to use table creator}
-Try out the following examples. Mark the lines between
-BEGIN TABLE and END TABLE in visual mode. Change to normal mode and type~:TAB\@.
-See what happens. Write a caption, change to the label field typing $<$C-j$>$ and
-give it a label name.
-You must convert all tables before running \LaTeX.
+Try out the following examples. Mark the lines between \verb|BEGIN TABLE| and
+\verb|END TABLE| in visual mode. Change to normal mode and type \verb|:TAB|. See
+what happens. Write a caption, change to the label field typing \verb|<C-j>|
+and give it a label name. You must convert all tables before running \LaTeX.
 
 \paragraph{One header line, continuous midrule, three body lines, three columns}
 The first line defines the header. The font is fixed in the vilatac script. It
-can be changed there. The columns are separated by ``\&'' signs.
-The second line is a midrule. It is defined by the ``-'' sign and goes from the
+can be changed there. The columns are separated by \verb|&|~signs.
+The second line is a midrule. It is defined by the \verb|-|~sign and goes from the
 first to the third column. The lines below the midrule are table body lines.
 Their font is also fixed in the vilatac script.
 
@@ -61,8 +62,8 @@ pig&80&eats everything
 
 \paragraph{Two header lines, midrules for each column, two columns in math mode}
 Now there are two header lines. The second line has a multicolumn definition. The
-``:2'' tells, that it should cover the next two columns. They are in math mode,
-see the ``\$'' sign at the end. \textbf{The column formati must be defined in
+\verb|:2| tells, that it should cover the next two columns. They are in math mode,
+see the \verb|$| sign at the end. \textbf{The column format must be defined in
 the first line.}
 The last two columns of the second header line are defined as multicolumns as
 well in order to protect them from math mode. This is important to know.
@@ -77,7 +78,7 @@ animal&characteristics:2$
 1-1&2-3
 dog&25&\infty
 cat&303&\lim_{\textrm{delicious}\rightarrow\textrm{saturated}}
-pig&80&\int \textrm{food}
+pig&80&\int\textrm{food}
 % --- END TABLE 2 ---
 
 \paragraph{Individual column formatting}
